@@ -1,4 +1,4 @@
-import pyhdb
+import pyhdb  # install with: pip install git+https://github.com/rlindner81/PyHDB.git@fb_ssl_connection
 from dotenv import find_dotenv, load_dotenv
 import os
 
