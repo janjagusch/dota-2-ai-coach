@@ -5,8 +5,7 @@ from hana_connector import HanaConnector
 import hana_queries as queries
 
 
-match_id = 4063266100
-# match_id = 4061660411
+# match_id = 4063266100
 
 
 def query_intensity(match_id):
@@ -49,12 +48,6 @@ def query_intensity(match_id):
     intensity_smoothed = intensity_smoothed.set_index("level_1", drop=True)
     highlights["seconds_interval"] = highlights["game_tick_interval"] * 10 + 90
     highlights["intensity_smoothed"] = intensity_smoothed["intensity"]
-
-    # highlights.set_index('seconds_interval').groupby('team_name')['intensity_smoothed'].plot(legend=True)
-    # plt.show()
-
-    # plt.plot(highlights["seconds_interval"], highlights["intensity_smoothed"])
-    # plt.show()
 
     queries.drop_view_if_exists(
         hana_connector.connection.cursor(), "entity_team")
