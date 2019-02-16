@@ -2,7 +2,6 @@ import pandas as pd
 from datetime import datetime
 import hana_connector
 
-from sklearn.metrics.pairwise import euclidean_distances
 
 pd.set_option('display.max_columns', None)
 
@@ -129,14 +128,14 @@ def get_kill_sequences(matchID):
 
 
 
-    
+
     return kill_sequences_sec
 
 """
 JSON
 Type = Teamfight
-Start = 
-End = 
+Start =
+End =
 """
 
 #print(identify_kill_sequences(4074440208))
