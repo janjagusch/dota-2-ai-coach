@@ -18,18 +18,16 @@ class HanaConnector():
     def __init__(self):
         self.connection = None
 
-    def __del__(self):
-        self.close()
 
     def connect(self):
         self.connection = pyhdb.connect(
-                host=os.getenv("HANA_DB"),
-                port=os.getenv("HANA_PORT"),
-                user=os.getenv("HANA_USER"),
-                password=os.getenv("HANA_PW"),
-                encrypt=True,
-                encrypt_verify=False
-            )
+            host=os.getenv("HANA_DB"),
+            port=os.getenv("HANA_PORT"),
+            user=os.getenv("HANA_USER"),
+            password=os.getenv("HANA_PW"),
+            encrypt=True,
+            encrypt_verify=False
+        )
         return self.connection
 
     def execute(self, sql):
@@ -41,4 +39,3 @@ class HanaConnector():
         if not self.connection == None:
             self.connection.close()
             self.connection = None
-
