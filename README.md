@@ -19,11 +19,11 @@ pyhdb
 
 ### Installing
 
-Install the necessary packages and place your HANA credentials in the .env file.
+Install the necessary packages and place your HANA credentials in the ```.env``` file.
 
 ## Deployment
 
-Start the service from coach_api_server.py
+Start the service from ```coach_api_server.py```.
 
 ## Authors
 
@@ -33,7 +33,6 @@ Start the service from coach_api_server.py
 * **Katharina Spinner** - *Front End* - [Rahtainka]("https://github.com/Rahtainka")
 * **Mariia Khodaeva** - *Dota 2 Knowledge and Project Management*
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## Acknowledgments
 
