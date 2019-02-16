@@ -7,20 +7,21 @@ import pandas as pd
 import hana_connector
 
 import identify_first_blood
+from coach import query_intensity
 
 """
-if this api should be run not on  cloudfoundry make sure that run_localy is
+if this api should be run not on  cloudfoundry make sure that run_locally is
 set to True, it will run on localhost:5000
 """
-run_localy = False
+run_locally = True
 
 # Create the application instance
 app = Flask(__name__)
 
-if run_localy:
+if run_locally:
     port = 5000
 else:
-    port = int(os.getenv("PORT"))
+    port = int(os.getenv("HANA_PORT"))
 
 
 # Create a URL route in our application for "/"
@@ -33,7 +34,6 @@ def home():
     hana = hana_connector.HanaConnector()
     hana.connect()
     data_set, columns = hana.execute("SELECT 'Hello Python World' FROM DUMMY")
-    hana.close()
     response = make_response(json.dumps(data_set), 200)
     return response
 
@@ -53,9 +53,9 @@ def pandas_example():
 @app.route('/first_blood/<matchID>')
 def get_first_blood(matchID):
     """
-    Finds the first blood event in a given matchID 
+    Finds the first blood event in a given matchID
     Responds for example to  localhost:5000/first_blood/4074440208
-    returns: 
+    returns:
         a record of with a scene start, end time, attacker and target
         if matchID can't be found returns Json with "MatchID Not Found"
     """
@@ -70,9 +70,9 @@ def get_first_blood(matchID):
 @app.route('/kill_sequences/<matchID>')
 def get_kill_sequences(matchID):
     """
-    Finds the kill sequencs where at least 3 heroes were kille in 18 seconds 
+    Finds the kill sequencs where at least 3 heroes were kille in 18 seconds
     Responds for example to  localhost:5000/kill_sequences/4074440208
-    returns: 
+    returns:
         a record of with a scene start, end time,
         if matchID can't be found returns Json with "MatchID Not Found"
     """
@@ -84,9 +84,33 @@ def get_kill_sequences(matchID):
     return response
 
 
+@app.route("/intensity/<matchID>")
+def get_intensity(matchID):
+    intensity = query_intensity(matchID)
+    if not intensity.empty:
+        intensity_radiant = {
+            "name": "Radiant",
+            "objects": list(intensity[intensity["team_name"] == "Radiant"]["intensity_smoothed"])
+        }
+        intensity_dire = {
+            "name": "Dire",
+            "objects": list(intensity[intensity["team_name"] == "Radiant"]["intensity_smoothed"])
+        }
+        seconds_interval = list(pd.Series(pd.unique(intensity["seconds_interval"])).sort_values())
+        response = {
+            "intensity_radiant": intensity_radiant,
+            "intensity_dire": intensity_dire,
+            "seconds_interval": seconds_interval
+        }
+        response = make_response(json.dumps(response), 200)
+    else:
+        response = make_response("{MatchID Not Found}", 404)
+    return response
+
+
 # If we're running in stand alone mode, run the application
 if __name__ == '__main__':
-    if run_localy:
+    if run_locally:
         app.run(debug=True)
     else:
         app.run(host='0.0.0.0', port=port, debug=False)
