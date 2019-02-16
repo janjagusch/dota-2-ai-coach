@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from hana_connector import HanaConnector
 import hana_queries as queries
 
