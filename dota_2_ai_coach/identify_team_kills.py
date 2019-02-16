@@ -36,22 +36,22 @@ combat_log_gold_xy = combat_log_gold[['targetNameIdx', 'tick', 'locationX', 'loc
 #match_xy['locationY'] = ((match_xy['CBodyComponent.m_cellY'] * 128) - 8192.0 + match_xy['CBodyComponent.m_vecY'])
 #match_xy = match_xy.drop(labels=['CBodyComponent.m_vecX', 'CBodyComponent.m_vecY', 'CBodyComponent.m_cellX', 'CBodyComponent.m_cellY'], axis=1)
 
-combat_log_xy = pd.merge(combat_log_only_kills, combat_log_gold_xy, how='left', left_on=['targetNameIdx','tick'], right_on=['targetNameIdx','tick'])#.drop(labels=['targetNameIdx'], axis=1)
+#combat_log_xy = pd.merge(combat_log_only_kills, combat_log_gold_xy, how='left', left_on=['targetNameIdx','tick'], right_on=['targetNameIdx','tick'])#.drop(labels=['targetNameIdx'], axis=1)
 #combat_log_xy = combat_log_xy.rename(index=str, columns={"locationX_y": "locationX_attacker", "locationY_y": "locationY_attacker"})
 #combat_log_xy = pd.merge(combat_log_xy, match_xy, how='left', left_on=['targetNameIdx','tick'], right_on=['m_iPlayerID','tick']).drop(labels=['m_iPlayerID'], axis=1)
-combat_log_xy = combat_log_xy.rename(index=str, columns={"locationX_y": "locationX_target", "locationY_y": "locationY_target"}).reset_index()
+#combat_log_xy = combat_log_xy.rename(index=str, columns={"locationX_y": "locationX_target", "locationY_y": "locationY_target"}).reset_index()
 
-combat_log_xy["adj_tick"] = combat_log_xy["tick"] - (combat_log_xy["tick"] - combat_log_xy["game_tick"])
-combat_log_xy["adj_tick_prior"] = combat_log_xy["adj_tick"].shift(1)
-combat_log_xy["tick_delta"] = combat_log_xy["adj_tick"] - combat_log_xy["adj_tick_prior"]
+combat_log_only_kills["adj_tick"] = combat_log_only_kills["tick"] - (combat_log_only_kills["tick"] - combat_log_only_kills["game_tick"])
+combat_log_only_kills["adj_tick_prior"] = combat_log_only_kills["adj_tick"].shift(1)
+combat_log_only_kills["tick_delta"] = combat_log_only_kills["adj_tick"] - combat_log_only_kills["adj_tick_prior"]
 
-print(combat_log_xy["adj_tick"])
+print(combat_log_only_kills["adj_tick"])
 
 # Compute euclidean distances between each kill
 #kill_xy = combat_log_xy[["locationX_target", "locationY_target"]].apply(lambda x: x["locationX_target", x["locationY_target"]])
-kill_xy = combat_log_xy[["locationX_target", "locationY_target"]].apply(lambda x: x.tolist(), axis=1).tolist()
+kill_xy = combat_log_only_kills[["locationX_target", "locationY_target"]].apply(lambda x: x.tolist(), axis=1).tolist()
 
-combat_log_xy.to_csv("kill_log_xy.csv")
+combat_log_only_kills.to_csv("kill_log_xy.csv")
 
 #kill_xy = "[" + combat_log_xy['locationX_target'].astype(str) + "," + combat_log_xy['locationY_target'].astype(str) + "]"
 
@@ -62,7 +62,7 @@ curr_tuple = []
 number_kills = 0
 kill_sequences = []
 
-for index, kill in combat_log_xy.iterrows():
+for index, kill in combat_log_only_kills.iterrows():
     curr_kill_xy = [kill['locationX_target'], kill['locationY_target']]
     if number_kills == 0:
         curr_tuple.append(kill['adj_tick'])
