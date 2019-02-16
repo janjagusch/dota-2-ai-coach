@@ -14,14 +14,7 @@ class HanaConnector():
     """
 
     def __init__(self):
-        self.connection = None
-
-    def __del__(self):
-        self.close()
-
-    def execute(self, sql):
-        if self.connection == None:
-            self.connection = pyhdb.connect(
+        self.connection = pyhdb.connect(
                 host=os.getenv("HANA_DB"),
                 port=os.getenv("HANA_PORT"),
                 user=os.getenv("HANA_USER"),
@@ -29,6 +22,11 @@ class HanaConnector():
                 encrypt=True,
                 encrypt_verify=False
             )
+
+    def __del__(self):
+        self.close()
+
+    def execute(self, sql):
         cursor = self.connection.cursor()
         cursor.execute(sql)
         return cursor.fetchall(), cursor.description
@@ -37,3 +35,8 @@ class HanaConnector():
         if not self.connection == None:
             self.connection.close()
             self.connection = None
+
+hana = HanaConnector()
+data, columns = hana.execute("SELECT 'Hello Python World' FROM DUMMY")
+hana.close()
+print(data)
