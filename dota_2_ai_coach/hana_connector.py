@@ -9,7 +9,7 @@ class HanaConnector():
     """ connects to the HANA Database and executes the sql queries
     example:
         hana = HanaConnector()
-        print(hana.execute("SELECT 'Hello Python World' FROM DUMMY"))
+        data, columns = hana.execute("SELECT 'Hello Python World' FROM DUMMY")
         hana.close()
     """
 
@@ -31,7 +31,7 @@ class HanaConnector():
             )
         cursor = self.connection.cursor()
         cursor.execute(sql)
-        return cursor.fetchall()
+        return cursor.fetchall(), cursor.description
 
     def close(self):
         if not self.connection == None:
