@@ -1,0 +1,4 @@
+flask
+git+https://github.com/rlindner81/PyHDB.git@fb_ssl_connection
+pandas
+python_dotenv
