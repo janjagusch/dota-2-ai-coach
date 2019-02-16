@@ -2,18 +2,26 @@ import pyhdb  # install with: pip install git+https://github.com/rlindner81/PyHD
 from dotenv import find_dotenv, load_dotenv
 import os
 
+import pandas as pd
 load_dotenv(dotenv_path=".env", verbose=True)
 
 
 class HanaConnector():
     """ connects to the HANA Database and executes the sql queries
     example:
-        hana = HanaConnector()
-        data, columns = hana.execute("SELECT 'Hello Python World' FROM DUMMY")
+        hana =HanaConnector()
+        connection = hana.connect()
+        print(pd.read_sql("SELECT 'Hello Python World' FROM DUMMY", connection))
         hana.close()
     """
 
     def __init__(self):
+        self.connection = None
+
+    def __del__(self):
+        self.close()
+
+    def connect(self):
         self.connection = pyhdb.connect(
                 host=os.getenv("HANA_DB"),
                 port=os.getenv("HANA_PORT"),
@@ -22,9 +30,7 @@ class HanaConnector():
                 encrypt=True,
                 encrypt_verify=False
             )
-
-    def __del__(self):
-        self.close()
+        return self.connection
 
     def execute(self, sql):
         cursor = self.connection.cursor()
@@ -36,7 +42,3 @@ class HanaConnector():
             self.connection.close()
             self.connection = None
 
-hana = HanaConnector()
-data, columns = hana.execute("SELECT 'Hello Python World' FROM DUMMY")
-hana.close()
-print(data)
