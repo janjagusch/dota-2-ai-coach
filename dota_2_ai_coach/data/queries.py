@@ -316,7 +316,3 @@ t."game_tick_interval", "team_name"
 
 def query_combat_pivot(match_id):
     return combat_pivot.format(query_combat_aggregated(match_id))
-
-
-with open("query_hana.sql", "w") as file_pointer:
-    file_pointer.write(query_combat_pivot(match_id=4063266100) + ";")
