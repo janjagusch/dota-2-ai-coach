@@ -5,7 +5,7 @@ applications:
   #command: python PyHDB-74ba553fbf5d9ffb2f513762684ae1a5ff0dcb4c/setup.py install && python hana_connector.py
   #command: python hana_connector.py
   #timeout: 180
-  command: python coach_api.py
+  command: python coach_api_server.py
   buildpack: https://github.com/cloudfoundry/python-buildpack
   
   
