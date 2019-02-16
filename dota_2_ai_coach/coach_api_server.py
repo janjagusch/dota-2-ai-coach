@@ -1,3 +1,4 @@
+import identify_kill_sequences
 from flask import Flask, make_response
 import os
 import json
@@ -11,7 +12,7 @@ import identify_first_blood
 if this api should be run not on  cloudfoundry make sure that run_localy is
 set to True, it will run on localhost:5000
 """
-run_localy = True
+run_localy = False
 
 # Create the application instance
 app = Flask(__name__)
@@ -61,6 +62,23 @@ def get_first_blood(matchID):
     first_blood_df = identify_first_blood.first_blood(matchID)
     if not first_blood_df.empty:
         response = make_response(first_blood_df.to_json(orient="records"), 200)
+    else:
+        response = make_response("{MatchID Not Found}", 404)
+    return response
+
+
+@app.route('/kill_sequences/<matchID>')
+def get_kill_sequences(matchID):
+    """
+    Finds the kill sequencs where at least 3 heroes were kille in 18 seconds 
+    Responds for example to  localhost:5000/kill_sequences/4074440208
+    returns: 
+        a record of with a scene start, end time,
+        if matchID can't be found returns Json with "MatchID Not Found"
+    """
+    kill_sequences = identify_kill_sequences.get_kill_sequences(matchID)
+    if not kill_sequences.empty:
+        response = make_response(kill_sequences.to_json(orient="records"), 200)
     else:
         response = make_response("{MatchID Not Found}", 404)
     return response
