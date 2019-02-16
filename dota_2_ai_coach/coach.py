@@ -1,15 +1,15 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from dota_2_ai_coach.hana_connector import HanaConnector
-import dota_2_ai_coach.hana_queries as queries
+from hana_connector import HanaConnector
+import hana_queries as queries
 
 
 match_id = 4063266100
 # match_id = 4061660411
 
 
-def query_highligths(match_id):
+def query_intensity(match_id):
 
     hana_connector = HanaConnector()
     hana_connector.connect()
@@ -70,6 +70,6 @@ def query_highligths(match_id):
     queries.drop_view_if_exists(hana_connector.connection.cursor(), "combat_pivot")
 
 
-    hana_connector.close()
+    # hana_connector.close()
 
     return highlights
