@@ -10,10 +10,10 @@ import identify_first_blood
 from coach import query_intensity
 
 """
-if this api should be run not on  cloudfoundry make sure that run_locally is
+if this api is not deployed on cloudfoundry make sure that run_locally is
 set to True, it will run on localhost:5000
 """
-run_locally = True
+run_locally = False
 
 # Create the application instance
 app = Flask(__name__)
@@ -21,7 +21,7 @@ app = Flask(__name__)
 if run_locally:
     port = 5000
 else:
-    port = int(os.getenv("HANA_PORT"))
+    port = int(os.getenv("PORT"))
 
 
 # Create a URL route in our application for "/"
@@ -94,17 +94,58 @@ def get_intensity(matchID):
         }
         intensity_dire = {
             "name": "Dire",
-            "objects": list(intensity[intensity["team_name"] == "Radiant"]["intensity_smoothed"])
+            "objects": list(intensity[intensity["team_name"] == "Dire"]["intensity_smoothed"])
         }
-        seconds_interval = list(pd.Series(pd.unique(intensity["seconds_interval"])).sort_values())
+        seconds_interval = list(
+            pd.Series(pd.unique(intensity["seconds_interval"])).sort_values())
         response = {
             "intensity_radiant": intensity_radiant,
             "intensity_dire": intensity_dire,
             "seconds_interval": seconds_interval
         }
         response = make_response(json.dumps(response), 200)
+        response.headers.add('Access-Control-Allow-Origin', '*')
     else:
         response = make_response("{MatchID Not Found}", 404)
+    return response
+
+
+@app.route("/match_duration/<matchID>")
+def get_match_duration(matchID):
+    hana = hana_connector.HanaConnector()
+    connection = hana.connect()
+    duration = pd.read_sql("""
+    SELECT
+        "duration"
+    FROM
+        "DOTA2_TI8"."matches"
+    WHERE
+        "match_id" = {matchID}
+    """.format(matchID=matchID), connection)
+    if not duration.empty:
+        response = make_response(duration.to_json(orient="records"), 200)
+    else:
+        response = make_response("{MatchID Not Found}", 404)
+    return response
+
+
+@app.route("/match_ids")
+def get_match_ids():
+    hana = hana_connector.HanaConnector()
+    connection = hana.connect()
+    ids = pd.read_sql("""
+    SELECT
+        "match_id"
+    FROM
+        "DOTA2_TI8"."matches"
+    ORDER BY
+        "match_id"
+        ASC
+    """, connection)
+    if not ids.empty:
+        response = make_response(ids["match_id"].to_json(orient="values"), 200)
+    else:
+        response = make_response("{No Matches Found}", 404)
     return response
 
 
