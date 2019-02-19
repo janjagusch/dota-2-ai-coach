@@ -1,12 +1,18 @@
 """
 This module provides basic queries for SAP HANA SQL.
 """
-
-
 from pyhdb.exceptions import DatabaseError
 
 
 def drop_view_if_exists(cursor, view_name):
+    """
+    Tries to drop a view and catches error, in case the view does not exist.
+    Args:
+        cursor: a database connection cursor
+        view_name: name of a view
+    Returns:
+        None
+    """
     try:
         cursor.execute("DROP VIEW {0}".format(view_name))
     except DatabaseError:
@@ -14,11 +20,17 @@ def drop_view_if_exists(cursor, view_name):
 
 
 def create_alter_view(sql, cursor, view_name):
+    """
+    Checks if a view exists, if so drops it and creates it again. Equivalent to a CREATE OR ALTER.
+    Args:
+        sql: a SQL query in str format
+        cursor: a database connection cursor
+        view_name: name of a view
+    Returns:
+        None
+    """
     drop_view_if_exists(cursor, view_name)
     cursor.execute("CREATE VIEW {0} AS {1}".format(view_name, sql))
-
-
-
 
 
 # This query generates a 1:1 relationship between entities (heroes, creeps, ...)
@@ -39,6 +51,9 @@ ORDER BY "targetTeam",
 
 
 def query_entity_team(match_id):
+    """
+    Compiles the entity team query, provided the match id.
+    """
     return entity_team.format(match_id)
 
 
@@ -84,6 +99,9 @@ WHERE c."match_id" = {0}
 
 
 def query_combat_cleaned(match_id):
+    """
+    Compiles the combat cleaned query, provided the match id.
+    """
     return combat_cleaned.format(match_id)
 
 
@@ -103,9 +121,13 @@ LEFT JOIN "DOTA2_TI8"."matches" AS m ON c."match_id" = m."match_id"
 
 
 def query_combat_joined():
+    """
+    Compiles the combat joined query.
+    """
     return combat_joined
 
 
+# This query aggregates data by the game tick intervals.
 combat_aggregated = \
 """
 SELECT "game_tick_interval",
@@ -130,9 +152,13 @@ ORDER BY "game_tick_interval",
 
 
 def query_combat_aggregated():
+    """
+    Compiles the combat aggregated query.
+    """
     return combat_aggregated
 
 
+# This query calculates aggreated in game information for each team and time interval.
 combat_pivot = \
 """
 SELECT t."game_tick_interval",
@@ -243,4 +269,7 @@ ORDER BY t."game_tick_interval",
 
 
 def query_combat_pivot():
+    """
+    Compiles the combat pivot query.
+    """
     return combat_pivot
