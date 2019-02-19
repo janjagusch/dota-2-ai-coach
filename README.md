@@ -27,12 +27,20 @@ Start the service from ```coach_api_server.py```.
 
 ## Authors
 
-* **Jan-Benedikt Jagusch** - *Big Data Technologies* - [jbj2505]("https://github.com/jbj2505"),
-* **Ringo Stahl** - *Distributed Systems* - [crnchbng]("https://github.com/crnchbng"),
-* **Marius Bock** - *Data Science* - [mariusbock]("https://github.com/mariusbock"),
-* **Katharina Spinner** - *Front End* - [Rahtainka]("https://github.com/Rahtainka")
-* **Mariia Khodaeva** - *Dota 2 Knowledge and Project Management*
-
+* **[Jan-Benedikt Jagusch](https://www.linkedin.com/in/jjagusch/)**
+  * *Big Data Engineer, Data Scientist*
+  * GitHub - [jbj2505](https://github.com/jbj2505)
+* **Ringo Stahl**
+ * *Web Developer*
+ * GitHub - [crnchbng](https://github.com/crnchbng)
+* **[Marius Bock](https://www.linkedin.com/in/marius-bock-046167108/)**
+  * *Data Scienctist*
+  * GitHub - [mariusbock](https://github.com/mariusbock)
+* **Katharina Spinner**
+  * *Front End Developer*
+  * GitHub - [Rahtainka](https://github.com/Rahtainka)
+* **[Mariia Khodaeva] (https://www.linkedin.com/in/mariia-khodaeva-813b8a169/)**
+  * *Dota 2 Expert and Project Management*
 
 ## Acknowledgments
 
