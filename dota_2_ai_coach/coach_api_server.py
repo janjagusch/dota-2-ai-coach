@@ -96,7 +96,7 @@ def get_first_blood(match_id):
 @app.route('/kill_sequences/<match_id>')
 def get_kill_sequences(match_id):
     """
-    Finds the kill sequencs where at least 3 heroes were kille in 18 seconds
+    Finds the kill sequencs where at least 3 heroes were killed in 18 seconds
     Responds for example to  localhost:5000/kill_sequences/4074440208
     Args:
         match_id: id of a match in database
