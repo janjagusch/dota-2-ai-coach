@@ -3,26 +3,33 @@ import json
 import hana_connector
 from datetime import datetime
 
-
-
-
-def first_blood(matchID):
+def first_blood(match_id):
+    """
+    Finds the first blood event in a given match_id
+    Responds for example to localhost:5000/first_blood/4074440208
+    Args:
+        match_id: id of a match in database
+    Returns:
+        Pandas dataframe with scene start, end time, attacker and target
+    """
     hana = hana_connector.HanaConnector()
     connection = hana.connect()
-    first_blood = pd.read_sql("""
-    SELECT
-        "tick", "type"
-    FROM 
-        "DOTA2_TI8"."combatlog"
-    WHERE
-        "match_id" = {matchID}
-    AND
-        "type" = 'DOTA_COMBATLOG_FIRST_BLOOD'
-    """.format(matchID=matchID), connection)
+    first_blood = pd.read_sql(
+        """
+        SELECT
+            "tick", "type"
+        FROM 
+            "DOTA2_TI8"."combatlog"
+        WHERE
+            "match_id" = {match_id}
+            AND
+            "type" = 'DOTA_COMBATLOG_FIRST_BLOOD'
+        """.format(match_id=match_id), connection)
+    
+    # return empty dataframe if no match is found
     if first_blood.empty:
         return first_blood
 
-    
     fb_tick = int(first_blood['tick'])
 
     first_death = pd.read_sql("""
@@ -31,23 +38,22 @@ def first_blood(matchID):
         FROM 
             "DOTA2_TI8"."combatlog"
         WHERE
-            "match_id" = {matchID}
-        AND
+            "match_id" = {match_id}
+            AND
             "type" = 'DOTA_COMBATLOG_DEATH'
             AND
             "tick" = {tick}
-        """.format(tick=fb_tick, matchID=matchID), connection)
+        """.format(tick=fb_tick, match_id=match_id), connection)
     
     target_id = int(first_death['targetNameIdx'])
 
-    #match_replay[(match_replay.targetNameIdx == target_id)]
     damage_log = pd.read_sql("""
         SELECT
             *
         FROM 
             "DOTA2_TI8"."combatlog"
         WHERE
-            "match_id" = {matchID}
+            "match_id" = {match_id}
             AND
             (
                 "type" = 'DOTA_COMBATLOG_DAMAGE'
@@ -60,10 +66,10 @@ def first_blood(matchID):
             "tick" >= {tick} - 450
             AND
             "targetNameIdx" = {target_id}
-            ORDER BY
+        ORDER BY
             "timestamp"
             ASC
-        """.format(tick=fb_tick, target_id=target_id, matchID=matchID), connection)
+        """.format(tick=fb_tick, target_id=target_id, match_id=match_id), connection)
     
     fb_output = pd.DataFrame(index=None)
     

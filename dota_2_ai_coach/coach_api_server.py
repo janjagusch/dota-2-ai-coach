@@ -1,3 +1,26 @@
+"""
+This is the coach API server.
+
+It is ready to run as a cloudfroundry deployment, 
+just change the "run_locally" variable to "False". 
+
+The response messages are all formated in JSON.
+
+The API endpoints are following routes:
+    / :              
+        a welcome message
+    /match_ids : 
+        returns all available match IDs
+    /first_blood/<match_id> : 
+        returns the first blood event of the given match_id
+    /kill_sequences/<match_id> :
+        returns all kill sequences of the given match_id
+    /intensity/<match_id> :
+        returns the intensity series of the given match_id
+    /match_duration/<match_id> :
+        returns the match duration of the given match_id
+"""
+
 import identify_kill_sequences
 from flask import Flask, make_response
 import os
@@ -9,11 +32,10 @@ import hana_connector
 import identify_first_blood
 from coach import query_intensity
 
-"""
-if this api is not deployed on cloudfoundry make sure that run_locally is
-set to True, it will run on localhost:5000
-"""
-run_locally = False
+
+# If this api is not deployed on cloudfoundry make sure that run_locally is
+# set to True, it will run on localhost:5000
+run_locally = True
 
 # Create the application instance
 app = Flask(__name__)
@@ -29,7 +51,8 @@ else:
 def home():
     """
     This function just responds to the root URL
-    return:  json HANA welcome Message
+    Return:  
+        JSON HANA welcome Message
     """
     hana = hana_connector.HanaConnector()
     hana.connect()
@@ -42,51 +65,64 @@ def home():
 def pandas_example():
     """
     This Example function just responds to the URL
-    localhost:5000/pandas_example
-    return: an example Pandas Dataframe to Json
+    host/pandas_example
+    Returns: 
+        an example Pandas Dataframe to Json
     """
     welcome = pd.DataFrame(["Hello", "World"])
     response = make_response(welcome.to_json(orient="values"), 200)
     return response
 
 
-@app.route('/first_blood/<matchID>')
-def get_first_blood(matchID):
+@app.route('/first_blood/<match_id>')
+def get_first_blood(match_id):
     """
-    Finds the first blood event in a given matchID
-    Responds for example to  localhost:5000/first_blood/4074440208
-    returns:
-        a record of with a scene start, end time, attacker and target
-        if matchID can't be found returns Json with "MatchID Not Found"
+    Finds the first blood event in a given match_id
+    Responds for example to localhost:5000/first_blood/4074440208
+    Args:
+        match_id: id of a match in database
+    Returns:
+        JSON records with scene start, end time, attacker and target
+        if match_id can't be found returns JSON with "match_id Not Found"
     """
-    first_blood_df = identify_first_blood.first_blood(matchID)
+    first_blood_df = identify_first_blood.first_blood(match_id)
     if not first_blood_df.empty:
         response = make_response(first_blood_df.to_json(orient="records"), 200)
     else:
-        response = make_response("{MatchID Not Found}", 404)
+        response = make_response("{match_id Not Found}", 404)
     return response
 
 
-@app.route('/kill_sequences/<matchID>')
-def get_kill_sequences(matchID):
+@app.route('/kill_sequences/<match_id>')
+def get_kill_sequences(match_id):
     """
     Finds the kill sequencs where at least 3 heroes were kille in 18 seconds
     Responds for example to  localhost:5000/kill_sequences/4074440208
-    returns:
-        a record of with a scene start, end time,
-        if matchID can't be found returns Json with "MatchID Not Found"
+    Args:
+        match_id: id of a match in database
+    Returns:
+        JSON records of scene start, end time,
+        if match_id can't be found returns JSON with "match_id Not Found"
     """
-    kill_sequences = identify_kill_sequences.get_kill_sequences(matchID)
+    kill_sequences = identify_kill_sequences.get_kill_sequences(match_id)
     if not kill_sequences.empty:
         response = make_response(kill_sequences.to_json(orient="records"), 200)
     else:
-        response = make_response("{MatchID Not Found}", 404)
+        response = make_response("{match_id Not Found}", 404)
     return response
 
 
-@app.route("/intensity/<matchID>")
-def get_intensity(matchID):
-    intensity = query_intensity(matchID)
+@app.route("/intensity/<match_id>")
+def get_intensity(match_id):
+    """
+    Aggregates all meaningful match events into a match intensity time series
+    Args:
+        match_id: id of a match in database
+    Returns:
+        JSON records of Radiant and Dire and the time intervals
+        if match_id can't be found returns JSON with "match_id Not Found"
+    """
+    intensity = query_intensity(match_id)
     if not intensity.empty:
         intensity_radiant = {
             "name": "Radiant",
@@ -106,12 +142,20 @@ def get_intensity(matchID):
         response = make_response(json.dumps(response), 200)
         response.headers.add('Access-Control-Allow-Origin', '*')
     else:
-        response = make_response("{MatchID Not Found}", 404)
+        response = make_response("{match_id Not Found}", 404)
     return response
 
 
-@app.route("/match_duration/<matchID>")
-def get_match_duration(matchID):
+@app.route("/match_duration/<match_id>")
+def get_match_duration(match_id):
+    """
+    Gets the duration of the match
+    Args:
+        match_id: id of a match in database
+    returns:
+        JSON record of the match duration,
+        if match_id can't be found returns JSON with "match_id Not Found"
+    """
     hana = hana_connector.HanaConnector()
     connection = hana.connect()
     duration = pd.read_sql("""
@@ -120,17 +164,23 @@ def get_match_duration(matchID):
     FROM
         "DOTA2_TI8"."matches"
     WHERE
-        "match_id" = {matchID}
-    """.format(matchID=matchID), connection)
+        "match_id" = {match_id}
+    """.format(match_id=match_id), connection)
     if not duration.empty:
         response = make_response(duration.to_json(orient="records"), 200)
     else:
-        response = make_response("{MatchID Not Found}", 404)
+        response = make_response("{match_id Not Found}", 404)
     return response
 
 
 @app.route("/match_ids")
 def get_match_ids():
+    """
+    Finds all available match_ids available in the database
+    Returns:
+        JSON array of all available match_ids,
+        if no match can be found returns JSON with "No matches found"
+    """
     hana = hana_connector.HanaConnector()
     connection = hana.connect()
     ids = pd.read_sql("""

@@ -51,7 +51,7 @@ URL Path | HTTP Verb | Request Body | Request Headers | Response Body | Descript
   * *Big Data Engineer, Data Scientist*
   * GitHub - [jbj2505](https://github.com/jbj2505)
 * **Ringo Stahl**
-  * *Web Developer*
+  * *Full Stack Developer*
   * GitHub - [crnchbng](https://github.com/crnchbng)
 * **[Marius Bock](https://www.linkedin.com/in/marius-bock-046167108/)**
   * *Data Scientist*

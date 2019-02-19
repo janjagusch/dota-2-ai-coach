@@ -3,21 +3,15 @@ from datetime import datetime
 import hana_connector
 
 
-pd.set_option('display.max_columns', None)
-
-"""
-IsTargetHero should be true
-
-
->2 ppl killed
-Time difference between kills <=18 seconds
-The hero which died must get some damage within the range of the previous kill
-Teamfight event time range creation:  [-18 seconds before the first death in the teamfight; +18 seconds after the last death]
-Determining teamfight map location: the location of the first kill within a fight (?)
-
-"""
-
 def get_kill_sequences(matchID):
+    """
+    Finds kill sequences where numerous heros got killed within 
+    a time frame of 18 seconds
+    Args:
+        match_id: id of a match in database
+    Returns:
+        Pandas dataframe with scenes starts, end times
+    """
     hana = hana_connector.HanaConnector()
     connection = hana.connect()
     print("asdasd")
@@ -73,8 +67,6 @@ def get_kill_sequences(matchID):
     for start, end in kill_sequences:
         start_times.append(start / 30 - 15)  # add 3 as buffer
         end_times.append(end / 30 + 5)  # add 3 as buffer
-
-    pd.concat([pd.Series([1]), a])
     
     kill_sequences_sec['timestamp_start'] = start_times
     kill_sequences_sec['datetime_start'] = kill_sequences_sec['timestamp_start'].apply(
