@@ -40,7 +40,7 @@ Start the service from ```coach_api_server.py```.
   * *Front End Developer*
   * GitHub - [Rahtainka](https://github.com/Rahtainka)
 * **[Mariia Khodaeva](https://www.linkedin.com/in/mariia-khodaeva-813b8a169/)**
-  * *Dota 2 Expert and Project Management*
+  * *Dota 2 Expert and Project Manager*
 
 ## Acknowledgments
 
