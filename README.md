@@ -31,8 +31,8 @@ Start the service from ```coach_api_server.py```.
   * *Big Data Engineer, Data Scientist*
   * GitHub - [jbj2505](https://github.com/jbj2505)
 * **Ringo Stahl**
- * *Web Developer*
- * GitHub - [crnchbng](https://github.com/crnchbng)
+  * *Web Developer*
+  * GitHub - [crnchbng](https://github.com/crnchbng)
 * **[Marius Bock](https://www.linkedin.com/in/marius-bock-046167108/)**
   * *Data Scienctist*
   * GitHub - [mariusbock](https://github.com/mariusbock)
