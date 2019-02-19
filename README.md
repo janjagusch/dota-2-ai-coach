@@ -44,5 +44,5 @@ Start the service from ```coach_api_server.py```.
 
 ## Acknowledgments
 
-* Thanks to [Hackdays]("https://hack-days.de/") for organizing this event.
+* Thanks to [Hackdays]("https://hack-days.de/") - especially to [Oliver Bruemmer](https://www.linkedin.com/in/oliverbruemmer/) - for organizing this event.
 * Thanks to [SAP]("https://www.sap.com/index.html") for challenging us with this exciting project.
