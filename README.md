@@ -1,14 +1,24 @@
 # Dota 2 AI Coach
 
-We use cutting edge AI to improve your Dota 2 skills.
+**We use cutting edge AI to improve your Dota 2 skills.**  
+
+Ok, enough with the buzzwords. This repository provides aggregated in-game information about professional DOTA 2 matches. We developed this project during [Hackdays Rhein-Neckar 2019](https://hack-days.de/rhein-neckar/home) over a period of three days (14.02.2019 - 18.02.2019).  
+
+Sponsor and data-/ infrastructure provider is the Esports department of [SAP](https://www.sap.com/index.html) in collaboration with [Team Liquid](https://www.teamliquidpro.com/).
+
+In short, the program compiles a series of SAP SQL queries, provided a match identifier, and executes them on a SAP HANA database. The results are then provided through an easy-to-use API.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Data
+
+The data provided consists of combat logs for Team Liquid during [The International 2018](https://liquipedia.net/dota2/The_International/2018) as well as additional meta information about the game. Unfortunately, the data cannot be shared publicly.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+The packages required for running this program are:
 
 ```
 flask
@@ -17,9 +27,11 @@ pandas
 pyhdb
 ```
 
-### Installing
+You can install them through the provided ```requirements.txt``` file.
 
-Install the necessary packages and place your HANA credentials in the ```.env``` file.
+### Connecting to HANA
+
+Place your HANA credentials in the ```.env``` file.
 
 ## Deployment
 
