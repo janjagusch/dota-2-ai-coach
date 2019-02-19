@@ -54,7 +54,7 @@ URL Path | HTTP Verb | Request Body | Request Headers | Response Body | Descript
   * *Web Developer*
   * GitHub - [crnchbng](https://github.com/crnchbng)
 * **[Marius Bock](https://www.linkedin.com/in/marius-bock-046167108/)**
-  * *Data Scienctist*
+  * *Data Scientist*
   * GitHub - [mariusbock](https://github.com/mariusbock)
 * **Katharina Spinner**
   * *Front End Developer*
