@@ -37,6 +37,13 @@ Place your HANA credentials in the ```.env``` file.
 
 Start the service from ```coach_api_server.py```.
 
+### Using the API
+URL Path | HTTP Verb | Request Body | Request Headers | Response Body | Description
+/match_ids | GET | None | None | List of match ids (int) | Returns all match ids in the database
+/first_blood | GET | match id (int) | None | | Returns first blood information for match id
+/kill_sequences | GET | match id (int) | None | | Returns kill sequences for match id
+/intensity | GET | match(id) | None | {"dire" {name: "Dire", objects: []}, "radiant": {name: "Radiant", objects: []}, seconds_interval: []} | Returns match intensity by team in 10 second intervals
+
 ## Authors
 
 * **[Jan-Benedikt Jagusch](https://www.linkedin.com/in/jjagusch/)**
