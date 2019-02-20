@@ -69,10 +69,10 @@ def get_kill_sequences(matchID):
         end_times.append(end / 30 + 5)  # add 3 as buffer
     
     kill_sequences_sec['tick_start'] = start_times
-    kill_sequences_sec['datetime_start'] = kill_sequences_sec['timestamp_start'].apply(
+    kill_sequences_sec['datetime_start'] = kill_sequences_sec['tick_start'].apply(
         lambda x: datetime.utcfromtimestamp(x).isoformat())
     kill_sequences_sec['tick_end'] = end_times
-    kill_sequences_sec['datetime_end'] = kill_sequences_sec['timestamp_end'].apply(
+    kill_sequences_sec['datetime_end'] = kill_sequences_sec['tick_end'].apply(
         lambda x: datetime.utcfromtimestamp(x).isoformat())
     kill_sequences_sec['type'] = "KILL_SEQUENCE"
 
